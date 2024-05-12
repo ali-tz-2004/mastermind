@@ -1,9 +1,15 @@
 import styled from "styled-components";
 import imgPanel from "../assets/images/Panel.jpg";
 import imgBackground from "../assets/images/Background.jpg";
+import { Colors } from "../utils/Models";
 
 interface INut {
   marginBottom?: number;
+  backgroundColorCell?: Colors;
+}
+
+interface ITagCell {
+  color: string;
 }
 
 const shadowColor = "#000000a8";
@@ -16,14 +22,12 @@ export const Main = styled.div`
 `;
 
 export const Panel = styled.div`
-  /* height: 600px; */
   width: 300px;
   background-image: url(${imgPanel});
   padding: 20px;
   box-shadow: 10px 10px 30px 10px #000000cc;
   position: relative;
   outline: 5px solid #ffffff54;
-  /* border: 10px solid #ffffffcc; */
 `;
 
 export const PlayGame = styled.div`
@@ -53,12 +57,23 @@ export const Nut = styled.div<INut>`
   height: 20px;
   width: 20px;
   border-radius: 50%;
-  background-image: url(${imgBackground});
-  box-shadow: inset 5px 5px 5px 2px #000, 2px 2px 5px 1px #000000;
+  ${({ backgroundColorCell }) =>
+    `${
+      !backgroundColorCell
+        ? `background-image: url(${imgBackground});
+        box-shadow: inset 5px 5px 5px 2px #000, 2px 2px 5px 1px #000000;
+        border: 3.5px solid #00000030;
+        `
+        : `
+        background: #fff;
+        box-shadow: inset -2px -2px 5px 4px ${backgroundColorCell}, 2px 2px 5px 1px #000
+        `
+    }`};
+
   display: flex;
   justify-content: center;
   margin-bottom: ${({ marginBottom }) => `${marginBottom}px`};
-  border: 3.5px solid #00000030;
+  cursor: pointer;
 `;
 
 export const NutSmall = styled.div<INut>`
@@ -75,7 +90,6 @@ export const Tag = styled.div`
   position: absolute;
   height: 30px;
   width: 140px;
-  background-color: red;
   background-image: url(${imgPanel});
   box-shadow: 3px 3px 5px 1px ${shadowColor};
   top: 25px;
@@ -85,21 +99,27 @@ export const Tag = styled.div`
 export const TagsPanel = styled.div`
   height: 50px;
   width: 100%;
-  background-color: red;
   background-image: url(${imgPanel});
   box-shadow: inset 3px 3px 5px 1px ${shadowColor};
   top: 25px;
   left: 20px;
   margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
 `;
 
-export const TagCell = styled.div`
-  /* position: absolute;
-  height: 30px;
-  width: 140px;
-  background-color: red;
-  background-image: url(${imgPanel});
-  box-shadow: 3px 3px 5px 1px #000;
-  bottom: 0;
-  left: 0; */
+export const TagCell = styled.input<ITagCell>`
+  all: unset;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: ${({ color }) =>
+    `inset -2px -2px 5px 4px ${color}, 2px 2px 5px 1px #000`};
+  cursor: pointer;
+  &:checked {
+    outline: 5px solid #27bad4;
+  }
 `;

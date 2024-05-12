@@ -1,11 +1,10 @@
-enum NamesColors {
-  Red = "#000",
-  Green = "#000",
-  Blue = "#000",
-  Yellow = "#000",
-  Brown = "#000",
-  Orange = "#000",
-  Black = "#000",
-  White = "#000",
-}
-export const Colors: NamesColors[] = [];
+import { IColor, Colors } from "./Models";
+
+export const ColorsCells: IColor[] = [
+  { key: 1, value: Colors.Red },
+  { key: 2, value: Colors.Green },
+  { key: 3, value: Colors.White },
+  { key: 4, value: Colors.Blue },
+  { key: 5, value: Colors.Yellow },
+  { key: 6, value: Colors.Black },
+];
