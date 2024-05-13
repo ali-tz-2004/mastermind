@@ -12,6 +12,10 @@ interface ITagCell {
   color: string;
 }
 
+interface IIconImage {
+  bottom: number;
+}
+
 const shadowColor = "#000000a8";
 
 export const Main = styled.div`
@@ -74,6 +78,8 @@ export const Nut = styled.div<INut>`
   justify-content: center;
   margin-bottom: ${({ marginBottom }) => `${marginBottom}px`};
   cursor: pointer;
+
+  color: white;
 `;
 
 export const NutSmall = styled.div<INut>`
@@ -122,4 +128,22 @@ export const TagCell = styled.input<ITagCell>`
   &:checked {
     outline: 5px solid #27bad4;
   }
+`;
+
+export const Check = styled.button`
+  position: absolute;
+  right: 10px;
+  bottom: 89px;
+`;
+
+export const IconImage = styled.div<IIconImage>`
+  position: absolute;
+  /* width: 30px; */
+  /* height: 30px; */
+  bottom: ${({ bottom }) => `${bottom}px`};
+  right: 120px;
+  /* background-color: red; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;

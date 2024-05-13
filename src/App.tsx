@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import {
+  Check,
+  IconImage,
   Main,
   Nut,
   NutSmall,
@@ -14,18 +16,18 @@ import {
   TagsPanel,
 } from "./components/StyledComponents";
 import { ColorsCells } from "./utils/Colors";
-import { Colors, IColor } from "./utils/Models";
-
-interface ICell {
-  Index: number;
-  StatusColor?: Colors;
-}
+import { Colors, ICell, ICheck, IColor } from "./utils/Models";
+import { FaCircleCheck } from "react-icons/fa6";
 
 function App() {
   const [Cells, setCells] = useState<ICell[]>([]);
   const [CellsCheck, setCellsCheck] = useState<ICell[]>([]);
 
   const [colorCell, setColorCell] = useState<IColor>();
+
+  const [level, setLevel] = useState<number>(0);
+
+  const [checked, setChecked] = useState<ICheck[]>([]);
 
   const spaceCells = 30;
 
@@ -36,7 +38,7 @@ function App() {
     }
   };
 
-  const fillCell = (index: number) => {
+  const fillSelectCell = (index: number) => {
     const temp = [...Cells];
     let cellIndex = temp.findIndex((x) => x.Index == index);
     if (cellIndex) {
@@ -45,19 +47,36 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    var tempCells: ICell[] = [];
-    for (let i = 44; i >= 1; i--) {
+  const fillDesign = () => {
+    let tempCells: ICell[] = [];
+    let tempCellsCheck: ICell[] = [];
+    let tempCheck: ICheck[] = [];
+
+    const countCells = 44;
+    const countCheck = 10;
+    let marginCount = 10;
+
+    for (let i = countCells; i >= 1; i--) {
       tempCells.push({ Index: i });
     }
     setCells(tempCells);
 
-    var tempCellsCheck: ICell[] = [];
-    for (let i = 44; i >= 1; i--) {
+    for (let i = countCells; i >= 1; i--) {
       tempCellsCheck.push({ Index: i });
     }
     setCellsCheck(tempCellsCheck);
+
+    for (let i = 1; i <= countCheck; i++) {
+      tempCheck.push({ margin: marginCount, visible: false });
+      marginCount += 40;
+    }
+    setChecked(tempCheck);
+  };
+
+  useEffect(() => {
+    fillDesign();
   }, []);
+
   return (
     <Main>
       <Panel>
@@ -68,10 +87,21 @@ function App() {
                 key={x.Index}
                 marginBottom={x.Index > 40 ? spaceCells : 0}
                 backgroundColorCell={x.StatusColor}
-                onClick={() => fillCell(x.Index)}
-              ></Nut>
+                onClick={() => fillSelectCell(x.Index)}
+              >
+                {x.Index}
+              </Nut>
             ))}
             <Tag></Tag>
+            <Check>
+              {checked.map((x) =>
+                x.visible ? (
+                  <IconImage bottom={x.margin}>
+                    <FaCircleCheck color="#a52a2a" size={20} />
+                  </IconImage>
+                ) : null
+              )}
+            </Check>
           </Nuts>
           <NutsSmall>
             {CellsCheck?.map((x) => (

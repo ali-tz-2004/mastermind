@@ -11,3 +11,13 @@ export interface IColor {
   key: number;
   value: Colors;
 }
+
+export interface ICell {
+  Index: number;
+  StatusColor?: Colors;
+}
+
+export interface ICheck {
+  margin: number;
+  visible: boolean;
+}
