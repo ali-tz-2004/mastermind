@@ -16,12 +16,11 @@ import {
   TagsPanel,
 } from "./components/StyledComponents";
 import { ColorsCells } from "./utils/Colors";
-import { Colors, ICell, ICheck, IColor } from "./utils/Models";
+import { Colors, ICell, ICheck, IColor, InnerCell } from "./utils/Models";
 import { FaCircleCheck } from "react-icons/fa6";
 
 function App() {
-  const [Cells, setCells] = useState<ICell[]>([]);
-  const [CellsCheck, setCellsCheck] = useState<ICell[]>([]);
+  const [Cells, setCells] = useState<ICell[][]>([]);
 
   const [colorCell, setColorCell] = useState<IColor>();
 
@@ -38,36 +37,57 @@ function App() {
     }
   };
 
-  const fillSelectCell = (index: number) => {
+  const handlerActiveCheck = () => {
     const temp = [...Cells];
-    let cellIndex = temp.findIndex((x) => x.Index == index);
-    if (cellIndex) {
-      temp[cellIndex].StatusColor = colorCell?.value;
-      setCells(temp);
-    }
+  };
+
+  const fillSelectCell = (
+    index: number,
+    indexParent: number,
+    indexChild: number
+  ) => {
+    const temp = [...Cells];
+
+    if (temp[index][indexParent].index > 1) return;
+
+    let a = temp[index][indexParent].mainCells.filter((x) => x.StatusColor);
+
+    temp[index][indexParent].mainCells[indexChild].StatusColor =
+      colorCell?.value;
+    setCells(temp);
   };
 
   const fillDesign = () => {
-    let tempCells: ICell[] = [];
-    let tempCellsCheck: ICell[] = [];
+    let tempCells: ICell[][] = [];
+    let tempCellsChildren: ICell[] = [];
     let tempCheck: ICheck[] = [];
 
-    const countCells = 44;
+    const countCells = 10;
+    const countCellsChild = 4;
     const countCheck = 10;
     let marginCount = 10;
 
     for (let i = countCells; i >= 1; i--) {
-      tempCells.push({ Index: i });
+      tempCellsChildren = [];
+      let mainCells: InnerCell[] = [];
+      let resultCells: InnerCell[] = [];
+      for (let j = 1; j <= countCellsChild; j++) {
+        mainCells.push({ Index: j });
+        resultCells.push({ Index: j });
+      }
+      tempCellsChildren.push({
+        index: i,
+        mainCells: mainCells,
+        resultCells: resultCells,
+        isDone: false,
+      });
+      tempCells.push(tempCellsChildren);
     }
+
     setCells(tempCells);
 
-    for (let i = countCells; i >= 1; i--) {
-      tempCellsCheck.push({ Index: i });
-    }
-    setCellsCheck(tempCellsCheck);
-
     for (let i = 1; i <= countCheck; i++) {
-      tempCheck.push({ margin: marginCount, visible: false });
+      tempCheck.push({ index: i, margin: marginCount, visible: false });
       marginCount += 40;
     }
     setChecked(tempCheck);
@@ -82,16 +102,22 @@ function App() {
       <Panel>
         <PlayGame>
           <Nuts>
-            {Cells?.map((x) => (
-              <Nut
-                key={x.Index}
-                marginBottom={x.Index > 40 ? spaceCells : 0}
-                backgroundColorCell={x.StatusColor}
-                onClick={() => fillSelectCell(x.Index)}
-              >
-                {x.Index}
-              </Nut>
-            ))}
+            {Cells?.map((z, index) =>
+              z.map((y, indexParent) =>
+                y.mainCells.map((x, indexChild) => (
+                  <Nut
+                    key={x.Index}
+                    marginBottom={x.Index > 40 ? spaceCells : 0}
+                    backgroundColorCell={x.StatusColor}
+                    onClick={() =>
+                      fillSelectCell(index, indexParent, indexChild)
+                    }
+                  >
+                    {x.Index}
+                  </Nut>
+                ))
+              )
+            )}
             <Tag></Tag>
             <Check>
               {checked.map((x) =>
@@ -104,13 +130,21 @@ function App() {
             </Check>
           </Nuts>
           <NutsSmall>
-            {CellsCheck?.map((x) => (
-              <NutSmall
-                key={x.Index}
-                marginBottom={x.Index > 40 ? spaceCells : 0}
-                className={x.Index > 40 ? "empty" : ""}
-              ></NutSmall>
-            ))}
+            {Cells?.map((z) =>
+              z.map((y) =>
+                y.mainCells.map((x) => (
+                  <NutSmall
+                    key={x.Index}
+                    marginBottom={x.Index > 40 ? spaceCells : 0}
+                    backgroundColorCell={x.StatusColor}
+                    className={y.index > 9 ? "empty" : ""}
+                    // onClick={() => fillSelectCell(x.Index)}
+                  >
+                    {x.Index}
+                  </NutSmall>
+                ))
+              )
+            )}
           </NutsSmall>
         </PlayGame>
         <TagsPanel>

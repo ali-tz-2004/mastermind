@@ -13,11 +13,19 @@ export interface IColor {
 }
 
 export interface ICell {
+  index: number;
+  mainCells: InnerCell[];
+  resultCells: InnerCell[];
+  isDone: boolean;
+}
+
+export interface InnerCell {
   Index: number;
   StatusColor?: Colors;
 }
 
 export interface ICheck {
+  index: number;
   margin: number;
   visible: boolean;
 }

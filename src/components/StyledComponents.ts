@@ -49,7 +49,7 @@ export const Nuts = styled.div`
 export const NutsSmall = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  row-gap: 20px;
+  row-gap: 25px;
   column-gap: 10px;
   padding: 10px;
   .empty {
