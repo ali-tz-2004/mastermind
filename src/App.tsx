@@ -112,9 +112,7 @@ function App() {
                     onClick={() =>
                       fillSelectCell(index, indexParent, indexChild)
                     }
-                  >
-                    {x.Index}
-                  </Nut>
+                  ></Nut>
                 ))
               )
             )}
@@ -139,9 +137,7 @@ function App() {
                     backgroundColorCell={x.StatusColor}
                     className={y.index > 9 ? "empty" : ""}
                     // onClick={() => fillSelectCell(x.Index)}
-                  >
-                    {x.Index}
-                  </NutSmall>
+                  ></NutSmall>
                 ))
               )
             )}
