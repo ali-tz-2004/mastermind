@@ -16,7 +16,9 @@ export interface ICell {
   index: number;
   mainCells: InnerCell[];
   resultCells: InnerCell[];
+  isFill: boolean;
   isDone: boolean;
+  isQuestion: boolean;
 }
 
 export interface InnerCell {

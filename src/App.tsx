@@ -18,6 +18,7 @@ import {
 import { ColorsCells } from "./utils/Colors";
 import { Colors, ICell, ICheck, IColor, InnerCell } from "./utils/Models";
 import { FaCircleCheck } from "react-icons/fa6";
+import { getRandomInt } from "./utils/Utils";
 
 function App() {
   const [Cells, setCells] = useState<ICell[][]>([]);
@@ -28,6 +29,8 @@ function App() {
 
   const [checked, setChecked] = useState<ICheck[]>([]);
 
+  const [executed, setExecuted] = useState(false);
+
   const spaceCells = 30;
 
   const SelectCell = (isChecked: boolean, key: number) => {
@@ -37,8 +40,11 @@ function App() {
     }
   };
 
-  const handlerActiveCheck = () => {
-    const temp = [...Cells];
+  const showActiveChecked = (index: number) => {
+    let temp = [...checked];
+    let check = temp.filter((x) => x.index === index)[0];
+    check.visible = true;
+    setChecked(temp);
   };
 
   const fillSelectCell = (
@@ -47,14 +53,28 @@ function App() {
     indexChild: number
   ) => {
     const temp = [...Cells];
+    if (index === 0) {
+      const randomNumber = getRandomInt(6);
+      const color = ColorsCells.find((x) => x.key === randomNumber)?.value;
+      temp[index][indexParent].mainCells[indexChild].StatusColor = color;
+      setCells(temp);
+    } else {
+      if (temp[index][indexParent].index > 1) return;
 
-    if (temp[index][indexParent].index > 1) return;
+      temp[index][indexParent].mainCells[indexChild].StatusColor =
+        colorCell?.value;
 
-    let a = temp[index][indexParent].mainCells.filter((x) => x.StatusColor);
+      const isChecked = temp[index][indexParent].mainCells.some(
+        (x) => !x.StatusColor
+      );
 
-    temp[index][indexParent].mainCells[indexChild].StatusColor =
-      colorCell?.value;
-    setCells(temp);
+      if (!isChecked) {
+        temp[index][indexParent].isFill = true;
+        showActiveChecked(temp[index][indexParent].index);
+      }
+
+      setCells(temp);
+    }
   };
 
   const fillDesign = () => {
@@ -79,7 +99,9 @@ function App() {
         index: i,
         mainCells: mainCells,
         resultCells: resultCells,
+        isFill: false,
         isDone: false,
+        isQuestion: i === 10 ? true : false,
       });
       tempCells.push(tempCellsChildren);
     }
@@ -93,9 +115,22 @@ function App() {
     setChecked(tempCheck);
   };
 
+  const onCheck = () => {};
+
   useEffect(() => {
     fillDesign();
   }, []);
+
+  useEffect(() => {
+    if (Cells.length > 0 && !executed) {
+      console.log(Cells);
+
+      for (let i = 0; i < 4; i++) {
+        fillSelectCell(0, 0, i);
+      }
+      setExecuted(true);
+    }
+  }, [Cells, executed]);
 
   return (
     <Main>
@@ -108,7 +143,9 @@ function App() {
                   <Nut
                     key={x.Index}
                     marginBottom={x.Index > 40 ? spaceCells : 0}
-                    backgroundColorCell={x.StatusColor}
+                    backgroundColorCell={
+                      index !== 0 ? x.StatusColor : undefined
+                    }
                     onClick={() =>
                       fillSelectCell(index, indexParent, indexChild)
                     }
@@ -120,7 +157,7 @@ function App() {
             <Check>
               {checked.map((x) =>
                 x.visible ? (
-                  <IconImage bottom={x.margin}>
+                  <IconImage bottom={x.margin} onClick={onCheck}>
                     <FaCircleCheck color="#a52a2a" size={20} />
                   </IconImage>
                 ) : null
