@@ -7,6 +7,11 @@ export enum Colors {
   Black = "#000",
 }
 
+export enum ColorsResult {
+  White = "#c4c4c4",
+  Black = "#000",
+}
+
 export interface IColor {
   key: number;
   value: Colors;
@@ -15,7 +20,7 @@ export interface IColor {
 export interface ICell {
   index: number;
   mainCells: InnerCell[];
-  resultCells: InnerCell[];
+  resultCells: InnerResultCell[];
   isFill: boolean;
   isDone: boolean;
   isQuestion: boolean;
@@ -24,6 +29,11 @@ export interface ICell {
 export interface InnerCell {
   Index: number;
   StatusColor?: Colors;
+}
+
+export interface InnerResultCell {
+  Index: number;
+  StatusColor?: ColorsResult;
 }
 
 export interface ICheck {

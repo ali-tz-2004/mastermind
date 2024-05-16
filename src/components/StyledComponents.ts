@@ -1,11 +1,16 @@
 import styled from "styled-components";
 import imgPanel from "../assets/images/Panel.jpg";
 import imgBackground from "../assets/images/Background.jpg";
-import { Colors } from "../utils/Models";
+import { Colors, ColorsResult } from "../utils/Models";
 
 interface INut {
   marginBottom?: number;
   backgroundColorCell?: Colors;
+}
+
+interface INutResult {
+  marginBottom?: number;
+  backgroundColorCell?: ColorsResult;
 }
 
 interface ITagCell {
@@ -82,7 +87,7 @@ export const Nut = styled.div<INut>`
   color: white;
 `;
 
-export const NutSmall = styled.div<INut>`
+export const NutSmall = styled.div<INutResult>`
   height: 10px;
   width: 10px;
   border-radius: 50%;
@@ -90,6 +95,21 @@ export const NutSmall = styled.div<INut>`
   box-shadow: inset 2px 2px 2px 1px #000;
   margin-bottom: ${({ marginBottom }) => `${marginBottom}px`};
   border: 2px solid #00000030;
+  position: relative;
+`;
+
+export const NutSmallOut = styled.div<INutResult>`
+  position: absolute;
+  background-color: ${({ backgroundColorCell }) =>
+    `${backgroundColorCell === ColorsResult.White ? "#fff" : "#494949"}`};
+  height: 11px;
+  width: 11px;
+  border-radius: 50%;
+  top: -3px;
+  left: -3px;
+  box-shadow: inset -2px -2px 5px 0.5px
+      ${({ backgroundColorCell }) => `${backgroundColorCell}`},
+    5px 5px 5px 1px #000;
 `;
 
 export const Tag = styled.div`

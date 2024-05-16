@@ -7,6 +7,7 @@ import {
   Main,
   Nut,
   NutSmall,
+  NutSmallOut,
   Nuts,
   NutsSmall,
   Panel,
@@ -16,7 +17,15 @@ import {
   TagsPanel,
 } from "./components/StyledComponents";
 import { ColorsCells } from "./utils/Colors";
-import { Colors, ICell, ICheck, IColor, InnerCell } from "./utils/Models";
+import {
+  Colors,
+  ColorsResult,
+  ICell,
+  ICheck,
+  IColor,
+  InnerCell,
+  InnerResultCell,
+} from "./utils/Models";
 import { FaCircleCheck } from "react-icons/fa6";
 import { getRandomInt } from "./utils/Utils";
 
@@ -25,7 +34,8 @@ function App() {
 
   const [colorCell, setColorCell] = useState<IColor>();
 
-  const [level, setLevel] = useState<number>(0);
+  const [level, setLevel] = useState<number>(1);
+  const [indexCell, setIndexCell] = useState<number>(0);
 
   const [checked, setChecked] = useState<ICheck[]>([]);
 
@@ -49,18 +59,22 @@ function App() {
     setChecked(temp);
   };
 
-  const fillColorQuestion = () => {};
-
   const fillSelectCell = (
     index: number,
     indexParent: number,
-    indexChild: number
+    indexChild: number,
+    isQuestion: boolean = true
   ) => {
+    if (isQuestion && index === 0) return;
+
     const temp = [...Cells];
+
+    if (temp[index][indexParent].isDone) return;
+
     if (index === 0) {
       fillQuestionCell(temp, index, indexParent, indexChild);
     } else {
-      if (temp[index][indexParent].index > 1) return;
+      if (temp[index][indexParent].index > level) return;
 
       temp[index][indexParent].mainCells[indexChild].StatusColor =
         colorCell?.value;
@@ -72,6 +86,7 @@ function App() {
       if (!isChecked) {
         temp[index][indexParent].isFill = true;
         showActiveChecked(temp[index][indexParent].index);
+        setIndexCell(index);
       }
 
       setCells(temp);
@@ -91,7 +106,7 @@ function App() {
     for (let i = countCells; i >= 1; i--) {
       tempCellsChildren = [];
       let mainCells: InnerCell[] = [];
-      let resultCells: InnerCell[] = [];
+      let resultCells: InnerResultCell[] = [];
       for (let j = 1; j <= countCellsChild; j++) {
         mainCells.push({ Index: j });
         resultCells.push({ Index: j });
@@ -116,7 +131,23 @@ function App() {
     setChecked(tempCheck);
   };
 
-  const onCheck = () => {};
+  const comparison = (temp: ICell[][]) => {
+    // console.log(temp[indexCell][0].mainCells);
+    // temp[indexCell][0].resultCells[0].StatusColor = ColorsResult.White;
+    // temp[indexCell][0].resultCells[1].StatusColor = ColorsResult.Black;
+    // temp[indexCell][0].resultCells[2].StatusColor = ColorsResult.White;
+    // temp[indexCell][0].resultCells[3].StatusColor = ColorsResult.Black;
+    // setCells(temp);
+  };
+
+  const onCheck = () => {
+    const temp = [...Cells];
+    temp[indexCell][0].isDone = true;
+    const newLevel = level + 1;
+    setLevel(newLevel);
+    setCells(temp);
+    comparison(temp);
+  };
 
   useEffect(() => {
     fillDesign();
@@ -124,10 +155,8 @@ function App() {
 
   useEffect(() => {
     if (Cells.length > 0 && !executed) {
-      console.log(Cells);
-
       for (let i = 0; i < 4; i++) {
-        fillSelectCell(0, 0, i);
+        fillSelectCell(0, 0, i, false);
       }
       setExecuted(true);
     }
@@ -168,14 +197,18 @@ function App() {
           <NutsSmall>
             {Cells?.map((z) =>
               z.map((y) =>
-                y.mainCells.map((x) => (
+                y.resultCells.map((x) => (
                   <NutSmall
                     key={x.Index}
                     marginBottom={x.Index > 40 ? spaceCells : 0}
-                    backgroundColorCell={x.StatusColor}
                     className={y.index > 9 ? "empty" : ""}
-                    // onClick={() => fillSelectCell(x.Index)}
-                  ></NutSmall>
+                  >
+                    {x.StatusColor ? (
+                      <NutSmallOut
+                        backgroundColorCell={x.StatusColor}
+                      ></NutSmallOut>
+                    ) : null}
+                  </NutSmall>
                 ))
               )
             )}
