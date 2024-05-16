@@ -31,6 +31,8 @@ function App() {
 
   const [executed, setExecuted] = useState(false);
 
+  const [randomNumbers, setRandomNumbers] = useState<number[]>([]);
+
   const spaceCells = 30;
 
   const SelectCell = (isChecked: boolean, key: number) => {
@@ -47,6 +49,8 @@ function App() {
     setChecked(temp);
   };
 
+  const fillColorQuestion = () => {};
+
   const fillSelectCell = (
     index: number,
     indexParent: number,
@@ -54,10 +58,7 @@ function App() {
   ) => {
     const temp = [...Cells];
     if (index === 0) {
-      const randomNumber = getRandomInt(6);
-      const color = ColorsCells.find((x) => x.key === randomNumber)?.value;
-      temp[index][indexParent].mainCells[indexChild].StatusColor = color;
-      setCells(temp);
+      fillQuestionCell(temp, index, indexParent, indexChild);
     } else {
       if (temp[index][indexParent].index > 1) return;
 
@@ -194,6 +195,25 @@ function App() {
       </Panel>
     </Main>
   );
+
+  function fillQuestionCell(
+    temp: ICell[][],
+    index: number,
+    indexParent: number,
+    indexChild: number
+  ) {
+    const randomNumber = getRandomInt(6);
+    if (randomNumbers.some((x) => x === randomNumber)) {
+      fillQuestionCell(temp, index, indexParent, indexChild);
+    } else {
+      const color = ColorsCells.find((x) => x.key === randomNumber)?.value;
+      temp[index][indexParent].mainCells[indexChild].StatusColor = color;
+      randomNumbers.push(randomNumber);
+      setRandomNumbers([...randomNumbers, randomNumber]);
+
+      setCells(temp);
+    }
+  }
 }
 
 export default App;
