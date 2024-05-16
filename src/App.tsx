@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import logo from "./logo.svg";
+import { useEffect, useState } from "react";
 import "./App.css";
 import {
   Check,
@@ -47,7 +46,7 @@ function App() {
 
   const SelectCell = (isChecked: boolean, key: number) => {
     if (isChecked) {
-      const cell = ColorsCells.find((x) => x.key == key);
+      const cell = ColorsCells.find((x) => x.key === key);
       setColorCell(cell);
     }
   };
@@ -63,9 +62,9 @@ function App() {
     index: number,
     indexParent: number,
     indexChild: number,
-    isQuestion: boolean = true
+    isQuestion: boolean = false
   ) => {
-    if (isQuestion && index === 0) return;
+    if (!isQuestion && index === 0) return;
 
     const temp = [...Cells];
 
@@ -132,21 +131,53 @@ function App() {
   };
 
   const comparison = (temp: ICell[][]) => {
-    // console.log(temp[indexCell][0].mainCells);
-    // temp[indexCell][0].resultCells[0].StatusColor = ColorsResult.White;
-    // temp[indexCell][0].resultCells[1].StatusColor = ColorsResult.Black;
-    // temp[indexCell][0].resultCells[2].StatusColor = ColorsResult.White;
-    // temp[indexCell][0].resultCells[3].StatusColor = ColorsResult.Black;
-    // setCells(temp);
+    const isQuestion = temp[0][0].isQuestion === true;
+
+    if (isQuestion) {
+      let index = 0;
+      let statusColor: Colors[] = [];
+      debugger;
+      for (let i = 0; i < 4; i++) {
+        if (
+          temp[0][0].mainCells[i].StatusColor ===
+            temp[indexCell][0].mainCells[i].StatusColor &&
+          !statusColor.some(
+            (x) => x === temp[indexCell][0].mainCells[i].StatusColor
+          )
+        ) {
+          temp[indexCell][0].resultCells[index].StatusColor =
+            ColorsResult.Black;
+          index++;
+          statusColor.push(temp[indexCell][0].mainCells[i].StatusColor!);
+        }
+      }
+      for (let i = 0; i < 4; i++) {
+        if (
+          temp[0][0].mainCells.some(
+            (x) => x.StatusColor === temp[indexCell][0].mainCells[i].StatusColor
+          ) &&
+          !statusColor.some(
+            (x) => x === temp[indexCell][0].mainCells[i].StatusColor
+          )
+        ) {
+          temp[indexCell][0].resultCells[index].StatusColor =
+            ColorsResult.White;
+          index++;
+          statusColor.push(temp[indexCell][0].mainCells[i].StatusColor!);
+        }
+      }
+    }
+
+    setCells(temp);
   };
 
   const onCheck = () => {
     const temp = [...Cells];
     temp[indexCell][0].isDone = true;
     const newLevel = level + 1;
+    comparison(temp);
     setLevel(newLevel);
     setCells(temp);
-    comparison(temp);
   };
 
   useEffect(() => {
@@ -156,7 +187,7 @@ function App() {
   useEffect(() => {
     if (Cells.length > 0 && !executed) {
       for (let i = 0; i < 4; i++) {
-        fillSelectCell(0, 0, i, false);
+        fillSelectCell(0, 0, i, true);
       }
       setExecuted(true);
     }
@@ -175,6 +206,7 @@ function App() {
                     marginBottom={x.Index > 40 ? spaceCells : 0}
                     backgroundColorCell={
                       index !== 0 ? x.StatusColor : undefined
+                      // x.StatusColor
                     }
                     onClick={() =>
                       fillSelectCell(index, indexParent, indexChild)
