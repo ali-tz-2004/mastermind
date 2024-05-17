@@ -193,7 +193,7 @@ export const EndGame = styled.div`
     }
   }
 
-  .win {
+  .gameOver {
     font-size: 50px;
   }
 

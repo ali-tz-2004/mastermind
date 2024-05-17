@@ -40,9 +40,9 @@ function App() {
   const [executed, setExecuted] = useState(false);
   const [randomNumbers, setRandomNumbers] = useState<number[]>([]);
   const [isEnd, setIsEnd] = useState<boolean>(false);
-  const [isWin, setIsWin] = useState<boolean>();
 
   const [selectedKey, setSelectedKey] = useState<number>();
+  const [gameOver, setGameOver] = useState<GameOver>(GameOver.Playing);
 
   const spaceCells = 30;
 
@@ -104,7 +104,7 @@ function App() {
 
     const countCells = 10;
     const countCellsChild = 4;
-    const countCheck = 10;
+    const countCheck = 9;
     let marginCount = 10;
 
     for (let i = countCells; i >= 1; i--) {
@@ -138,7 +138,7 @@ function App() {
 
   const endGame = (gameOver: GameOver) => {
     if (gameOver === GameOver.Win) {
-      setIsWin(true);
+      setGameOver(GameOver.Win);
     }
   };
 
@@ -189,14 +189,16 @@ function App() {
     setCells(temp);
   };
 
-  const onCheck = () => {
-    debugger;
+  const onCheck = (index: number) => {
     const temp = [...Cells];
     temp[indexCell][0].isDone = true;
     const newLevel = level + 1;
     comparison(temp);
     setLevel(newLevel);
     setCells(temp);
+    if (index === 9 && gameOver === GameOver.Playing) {
+      setGameOver(GameOver.Lose);
+    }
   };
 
   const fillQuestionCell = (
@@ -232,7 +234,7 @@ function App() {
     setCells(temp);
 
     let tempCheck: ICheck[] = [...checked];
-    for (let i = 0; i <= 9; i++) {
+    for (let i = 0; i <= 8; i++) {
       tempCheck[i].visible = false;
     }
     setChecked(tempCheck);
@@ -241,10 +243,11 @@ function App() {
   };
 
   const playAgain = () => {
+    debugger;
     reset();
     setColorCell(undefined);
+    setGameOver(GameOver.Playing);
     setIsEnd(false);
-    setIsWin(undefined);
     setIndexCell(0);
     setLevel(1);
     setRandomNumbers([]);
@@ -280,7 +283,9 @@ function App() {
                     key={x.Index}
                     marginBottom={x.Index > 40 ? spaceCells : 0}
                     backgroundColorCell={
-                      index !== 0 ? x.StatusColor : undefined
+                      index !== 0 || gameOver !== GameOver.Playing
+                        ? x.StatusColor
+                        : undefined
                     }
                     onClick={() =>
                       fillSelectCell(index, indexParent, indexChild)
@@ -289,11 +294,11 @@ function App() {
                 ))
               )
             )}
-            <Tag></Tag>
+            {gameOver === GameOver.Playing ? <Tag></Tag> : null}
             <Check>
               {checked.map((x) =>
                 x.visible ? (
-                  <IconImage bottom={x.margin} onClick={onCheck}>
+                  <IconImage bottom={x.margin} onClick={() => onCheck(x.index)}>
                     <FaCircleCheck color="#a52a2a" size={20} />
                   </IconImage>
                 ) : null
@@ -332,11 +337,19 @@ function App() {
             ></TagCell>
           ))}
         </TagsPanel>
-        {isWin ? (
+        {gameOver === GameOver.Win ? (
           <EndGame>
             You Are
             <br />
-            <div className="win">Win</div>
+            <div className="gameOver">Win</div>
+            <button onClick={playAgain}>play again</button>
+          </EndGame>
+        ) : null}
+        {gameOver === GameOver.Lose ? (
+          <EndGame>
+            You Are
+            <br />
+            <div className="gameOver">Lose</div>
             <button onClick={playAgain}>play again</button>
           </EndGame>
         ) : null}
