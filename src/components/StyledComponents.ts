@@ -167,3 +167,38 @@ export const IconImage = styled.div<IIconImage>`
   align-items: center;
   justify-content: center;
 `;
+
+export const EndGame = styled.div`
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #000;
+  opacity: 75%;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+
+  animation: show 150ms ease-in;
+  transition: 50ms ease-in;
+  @keyframes show {
+    0% {
+      opacity: 0.5;
+      transform: scale(0);
+    }
+  }
+
+  .win {
+    font-size: 50px;
+  }
+
+  button {
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+`;

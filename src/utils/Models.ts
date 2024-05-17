@@ -3,13 +3,19 @@ export enum Colors {
   Green = "green",
   White = "#c4c4c4",
   Blue = "blue",
-  Yellow = "#cfcf02",
+  Yellow = "#dada00",
   Black = "#000",
 }
 
 export enum ColorsResult {
   White = "#c4c4c4",
   Black = "#000",
+}
+
+export enum GameOver {
+  Win,
+  Lose,
+  Playing,
 }
 
 export interface IColor {
@@ -24,6 +30,7 @@ export interface ICell {
   isFill: boolean;
   isDone: boolean;
   isQuestion: boolean;
+  statusGame: GameOver;
 }
 
 export interface InnerCell {
