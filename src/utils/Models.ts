@@ -23,14 +23,17 @@ export interface IColor {
   value: Colors;
 }
 
+export interface IPuzzleCell {
+  index: number;
+  StatusColor: Colors;
+}
+
 export interface ICell {
   index: number;
   mainCells: InnerCell[];
   resultCells: InnerResultCell[];
   isFill: boolean;
   isDone: boolean;
-  isQuestion: boolean;
-  statusGame: GameOver;
 }
 
 export interface InnerCell {

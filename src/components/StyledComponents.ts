@@ -57,6 +57,7 @@ export const NutsSmall = styled.div`
   row-gap: 25px;
   column-gap: 10px;
   padding: 10px;
+  padding-top: 53px;
   .empty {
     opacity: 0;
   }
@@ -184,8 +185,8 @@ export const EndGame = styled.div`
   text-align: center;
   color: #fff;
 
-  animation: show 150ms ease-in;
-  transition: 50ms ease-in;
+  animation: show 150ms ease-in-out;
+  transition: 50ms ease-in-out;
   @keyframes show {
     0% {
       opacity: 0.5;

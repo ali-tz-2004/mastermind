@@ -24,27 +24,23 @@ import {
   ICell,
   ICheck,
   IColor,
+  IPuzzleCell,
   InnerCell,
   InnerResultCell,
 } from "./utils/Models";
 import { FaCircleCheck } from "react-icons/fa6";
 import { getRandomInt } from "./utils/Utils";
-import { resourceUsage } from "process";
 
 function App() {
   const [Cells, setCells] = useState<ICell[][]>([]);
+  const [CellsPuzzle, setCellsPuzzle] = useState<IPuzzleCell[]>([]);
   const [colorCell, setColorCell] = useState<IColor>();
   const [level, setLevel] = useState<number>(1);
   const [indexCell, setIndexCell] = useState<number>(0);
   const [checked, setChecked] = useState<ICheck[]>([]);
-  const [executed, setExecuted] = useState(false);
-  const [randomNumbers, setRandomNumbers] = useState<number[]>([]);
-  const [isEnd, setIsEnd] = useState<boolean>(false);
 
   const [selectedKey, setSelectedKey] = useState<number>();
   const [gameOver, setGameOver] = useState<GameOver>(GameOver.Playing);
-
-  const spaceCells = 30;
 
   const SelectCell = (isChecked: boolean, key: number) => {
     if (isChecked) {
@@ -56,53 +52,46 @@ function App() {
 
   const showActiveChecked = (index: number) => {
     let temp = [...checked];
-    let check = temp.filter((x) => x.index === index)[0];
-    check.visible = true;
+    let check = temp.find((x) => x.index === index);
+    check!.visible = true;
     setChecked(temp);
   };
 
   const fillSelectCell = (
     index: number,
     indexParent: number,
-    indexChild: number,
-    isQuestion: boolean = false
+    indexChild: number
   ) => {
-    debugger;
-    if (isEnd) return;
-    if (!isQuestion && index === 0) return;
+    if (gameOver == GameOver.Win || gameOver == GameOver.Lose) return;
 
     const temp = [...Cells];
 
     if (temp[index][indexParent].isDone) return;
 
-    if (index === 0) {
-      fillQuestionCell(temp, index, indexParent, indexChild);
-    } else {
-      if (temp[index][indexParent].index > level) return;
+    if (temp[index][indexParent].index > level) return;
 
-      temp[index][indexParent].mainCells[indexChild].StatusColor =
-        colorCell?.value;
+    temp[index][indexParent].mainCells[indexChild].StatusColor =
+      colorCell?.value;
 
-      const isChecked = temp[index][indexParent].mainCells.some(
-        (x) => !x.StatusColor
-      );
+    const isChecked = temp[index][indexParent].mainCells.some(
+      (x) => !x.StatusColor
+    );
 
-      if (!isChecked) {
-        temp[index][indexParent].isFill = true;
-        showActiveChecked(temp[index][indexParent].index);
-        setIndexCell(index);
-      }
-
-      setCells(temp);
+    if (!isChecked) {
+      temp[index][indexParent].isFill = true;
+      showActiveChecked(temp[index][indexParent].index);
+      setIndexCell(index);
     }
+
+    setCells(temp);
   };
 
-  const fillDesign = () => {
+  const fillDesignCells = () => {
     let tempCells: ICell[][] = [];
     let tempCellsChildren: ICell[] = [];
     let tempCheck: ICheck[] = [];
 
-    const countCells = 10;
+    const countCells = 9;
     const countCellsChild = 4;
     const countCheck = 9;
     let marginCount = 10;
@@ -121,8 +110,6 @@ function App() {
         resultCells: resultCells,
         isFill: false,
         isDone: false,
-        isQuestion: i === 10 ? true : false,
-        statusGame: GameOver.Playing,
       });
       tempCells.push(tempCellsChildren);
     }
@@ -136,53 +123,39 @@ function App() {
     setChecked(tempCheck);
   };
 
-  const endGame = (gameOver: GameOver) => {
-    if (gameOver === GameOver.Win) {
-      setGameOver(GameOver.Win);
-    }
-  };
-
   const comparison = (temp: ICell[][]) => {
-    const isQuestion = temp[0][0].isQuestion === true;
-
-    if (isQuestion) {
-      let index = 0;
-      let statusColor: Colors[] = [];
-      for (let i = 0; i < 4; i++) {
-        if (
-          temp[0][0].mainCells[i].StatusColor ===
-            temp[indexCell][0].mainCells[i].StatusColor &&
-          !statusColor.some(
-            (x) => x === temp[indexCell][0].mainCells[i].StatusColor
-          )
-        ) {
-          temp[indexCell][0].resultCells[index].StatusColor =
-            ColorsResult.Black;
-          index++;
-          statusColor.push(temp[indexCell][0].mainCells[i].StatusColor!);
-        }
+    let index = 0;
+    let statusColor: Colors[] = [];
+    for (let i = 0; i < 4; i++) {
+      if (
+        CellsPuzzle[i].StatusColor ===
+          temp[indexCell][0].mainCells[i].StatusColor &&
+        !statusColor.some(
+          (x) => x === temp[indexCell][0].mainCells[i].StatusColor
+        )
+      ) {
+        temp[indexCell][0].resultCells[index].StatusColor = ColorsResult.Black;
+        index++;
+        statusColor.push(temp[indexCell][0].mainCells[i].StatusColor!);
       }
-      if (statusColor.length === 4) {
-        temp[indexCell][0].statusGame = GameOver.Win;
-        setCells(temp);
-        endGame(GameOver.Win);
-        setIsEnd(true);
-        return;
-      }
-      for (let i = 0; i < 4; i++) {
-        if (
-          temp[0][0].mainCells.some(
-            (x) => x.StatusColor === temp[indexCell][0].mainCells[i].StatusColor
-          ) &&
-          !statusColor.some(
-            (x) => x === temp[indexCell][0].mainCells[i].StatusColor
-          )
-        ) {
-          temp[indexCell][0].resultCells[index].StatusColor =
-            ColorsResult.White;
-          index++;
-          statusColor.push(temp[indexCell][0].mainCells[i].StatusColor!);
-        }
+    }
+    if (statusColor.length === 4) {
+      setGameOver(GameOver.Win);
+      setCells(temp);
+      return;
+    }
+    for (let i = 0; i < 4; i++) {
+      if (
+        CellsPuzzle.some(
+          (x) => x.StatusColor === temp[indexCell][0].mainCells[i].StatusColor
+        ) &&
+        !statusColor.some(
+          (x) => x === temp[indexCell][0].mainCells[i].StatusColor
+        )
+      ) {
+        temp[indexCell][0].resultCells[index].StatusColor = ColorsResult.White;
+        index++;
+        statusColor.push(temp[indexCell][0].mainCells[i].StatusColor!);
       }
     }
 
@@ -201,34 +174,14 @@ function App() {
     }
   };
 
-  const fillQuestionCell = (
-    temp: ICell[][],
-    index: number,
-    indexParent: number,
-    indexChild: number
-  ) => {
-    const randomNumber = getRandomInt(6);
-    if (randomNumbers.some((x) => x === randomNumber)) {
-      fillQuestionCell(temp, index, indexParent, indexChild);
-    } else {
-      const color = ColorsCells.find((x) => x.key === randomNumber)?.value;
-      temp[index][indexParent].mainCells[indexChild].StatusColor = color;
-      randomNumbers.push(randomNumber);
-      setRandomNumbers([...randomNumbers, randomNumber]);
-
-      setCells(temp);
-    }
-  };
-
   const reset = () => {
     const temp = [...Cells];
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 9; i++) {
       for (let j = 0; j < 4; j++) {
         temp[i][0].mainCells[j].StatusColor = undefined;
         temp[i][0].resultCells[j].StatusColor = undefined;
         temp[i][0].isFill = false;
         temp[i][0].isDone = false;
-        temp[i][0].statusGame = GameOver.Playing;
       }
     }
     setCells(temp);
@@ -243,50 +196,70 @@ function App() {
   };
 
   const playAgain = () => {
-    debugger;
     reset();
     setColorCell(undefined);
     setGameOver(GameOver.Playing);
-    setIsEnd(false);
     setIndexCell(0);
     setLevel(1);
-    setRandomNumbers([]);
-    setExecuted(false);
+    fillPuzzleCells();
   };
 
-  const fillQuestion = () => {
-    if (Cells.length > 0 && !executed) {
-      for (let i = 0; i < 4; i++) {
-        fillSelectCell(0, 0, i, true);
-      }
-      setExecuted(true);
+  const getRandomColors = (
+    colorCount: number = 4,
+    temp: IColor[] = [],
+    index: number = 0
+  ): IColor[] => {
+    if (temp.length == colorCount) return temp;
+
+    var randomColorKey = getRandomInt(ColorsCells.length);
+
+    if (temp.some((x) => x.key == randomColorKey)) {
+      return getRandomColors(colorCount, temp, index);
     }
+    temp[index] = ColorsCells.find((x) => x.key == randomColorKey)!;
+    return getRandomColors(colorCount, temp, index + 1);
+  };
+
+  const fillPuzzleCells = () => {
+    let puzzleCell: IPuzzleCell[] = [];
+    let randomColors = getRandomColors();
+
+    randomColors.forEach((element, i) => {
+      puzzleCell.push({ index: i, StatusColor: element.value });
+    });
+
+    setCellsPuzzle(puzzleCell);
   };
 
   useEffect(() => {
-    fillDesign();
+    fillDesignCells();
+    fillPuzzleCells();
   }, []);
-
-  useEffect(() => {
-    fillQuestion();
-  }, [Cells, executed]);
 
   return (
     <Main>
       <Panel>
         <PlayGame>
           <Nuts>
+            {CellsPuzzle.map((x) => (
+              <Nut
+                key={x.index}
+                backgroundColorCell={
+                  gameOver === GameOver.Playing ? undefined : x.StatusColor
+                }
+              ></Nut>
+            ))}
             {Cells?.map((z, index) =>
               z.map((y, indexParent) =>
                 y.mainCells.map((x, indexChild) => (
                   <Nut
                     key={x.Index}
-                    marginBottom={x.Index > 40 ? spaceCells : 0}
-                    backgroundColorCell={
-                      index !== 0 || gameOver !== GameOver.Playing
-                        ? x.StatusColor
-                        : undefined
-                    }
+                    // backgroundColorCell={
+                    //   index !== 0 || gameOver !== GameOver.Playing
+                    //     ? x.StatusColor
+                    //     : undefined
+                    // }
+                    backgroundColorCell={x.StatusColor}
                     onClick={() =>
                       fillSelectCell(index, indexParent, indexChild)
                     }
@@ -311,7 +284,6 @@ function App() {
                 y.resultCells.map((x) => (
                   <NutSmall
                     key={x.Index}
-                    marginBottom={x.Index > 40 ? spaceCells : 0}
                     className={y.index > 9 ? "empty" : ""}
                   >
                     {x.StatusColor ? (
