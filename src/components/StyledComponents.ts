@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import imgPanel from "../assets/images/Panel.jpg";
 import imgBackground from "../assets/images/Background.jpg";
 import { Colors, ColorsResult } from "../utils/Models";
@@ -22,6 +22,29 @@ interface IIconImage {
 }
 
 const shadowColor = "#000000a8";
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+`;
+
+const pulse = keyframes`
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+`;
 
 export const Main = styled.div`
   display: flex;
@@ -51,6 +74,7 @@ export const Nuts = styled.div`
   column-gap: 10px;
   padding: 10px;
 `;
+
 export const NutsSmall = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -67,25 +91,25 @@ export const Nut = styled.div<INut>`
   height: 20px;
   width: 20px;
   border-radius: 50%;
+  background-image: url(${imgBackground});
+  box-shadow: inset 5px 5px 5px 2px #000, 2px 2px 5px 1px #000000;
+  border: 3.5px solid #00000030;
+  transition: background-color 0.3s, box-shadow 0.3s, border 0.3s;
+
   ${({ backgroundColorCell }) =>
-    `${
-      !backgroundColorCell
-        ? `background-image: url(${imgBackground});
-        box-shadow: inset 5px 5px 5px 2px #000, 2px 2px 5px 1px #000000;
-        border: 3.5px solid #00000030;
-        `
-        : `
-        background: #fff;
-        box-shadow: inset -2px -2px 5px 4px ${backgroundColorCell}, 2px 2px 5px 1px #000
-        `
-    }`};
+    backgroundColorCell &&
+    `
+    background: #fff;
+    box-shadow: inset -2px -2px 5px 7px ${backgroundColorCell}, 2px 2px 5px 1px #000;
+    border: 0 solid ${backgroundColorCell};
+  `};
 
   display: flex;
   justify-content: center;
   margin-bottom: ${({ marginBottom }) => `${marginBottom}px`};
   cursor: pointer;
-
   color: white;
+  animation: ${fadeIn} 300ms ease-in-out;
 `;
 
 export const NutSmall = styled.div<INutResult>`
@@ -97,6 +121,8 @@ export const NutSmall = styled.div<INutResult>`
   margin-bottom: ${({ marginBottom }) => `${marginBottom}px`};
   border: 2px solid #00000030;
   position: relative;
+  /* animation: ${pulse} 1s infinite; */
+  animation: ${fadeIn} 300ms ease-in-out;
 `;
 
 export const NutSmallOut = styled.div<INutResult>`
@@ -111,6 +137,7 @@ export const NutSmallOut = styled.div<INutResult>`
   box-shadow: inset -2px -2px 5px 0.5px
       ${({ backgroundColorCell }) => `${backgroundColorCell}`},
     5px 5px 5px 1px #000;
+  animation: ${fadeIn} 300ms ease-in-out;
 `;
 
 export const Tag = styled.div`
@@ -144,8 +171,12 @@ export const TagCell = styled.input<ITagCell>`
   border-radius: 50%;
   background: #fff;
   box-shadow: ${({ color }) =>
-    `inset -2px -2px 5px 4px ${color}, 2px 2px 5px 1px #000`};
+    `inset -2px -2px 5px 6px ${color}, 2px 2px 5px 1px #000`};
   cursor: pointer;
+  transition: transform 200ms;
+  &:hover {
+    transform: scale(1.1);
+  }
   &:checked {
     outline: 5px solid #27bad4;
   }
@@ -159,11 +190,8 @@ export const Check = styled.button`
 
 export const IconImage = styled.div<IIconImage>`
   position: absolute;
-  /* width: 30px; */
-  /* height: 30px; */
   bottom: ${({ bottom }) => `${bottom}px`};
   right: 120px;
-  /* background-color: red; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -186,11 +214,15 @@ export const EndGame = styled.div`
   color: #fff;
 
   animation: show 150ms ease-in-out;
-  transition: 50ms ease-in-out;
+  transition: opacity 500ms ease-in-out, transform 500ms ease-in-out;
   @keyframes show {
     0% {
       opacity: 0.5;
       transform: scale(0);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
     }
   }
 
@@ -199,7 +231,12 @@ export const EndGame = styled.div`
   }
 
   button {
-    padding: 5px 10px;
+    margin-top: 1rem;
+    background-color: transparent;
+    border: 3px solid #fff;
+    padding: 7px 18px;
     border-radius: 5px;
+    color: #fff;
+    border-radius: 10px;
   }
 `;

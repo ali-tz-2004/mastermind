@@ -254,11 +254,6 @@ function App() {
                 y.mainCells.map((x, indexChild) => (
                   <Nut
                     key={x.Index}
-                    // backgroundColorCell={
-                    //   index !== 0 || gameOver !== GameOver.Playing
-                    //     ? x.StatusColor
-                    //     : undefined
-                    // }
                     backgroundColorCell={x.StatusColor}
                     onClick={() =>
                       fillSelectCell(index, indexParent, indexChild)

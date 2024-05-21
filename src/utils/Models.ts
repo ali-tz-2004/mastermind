@@ -1,10 +1,10 @@
 export enum Colors {
-  Red = "red",
-  Green = "green",
-  White = "#c4c4c4",
-  Blue = "blue",
-  Yellow = "#dada00",
-  Black = "#000",
+  Red = "#da1212",
+  Green = "#147414",
+  White = "#b1b0b0",
+  Blue = "#2929a0",
+  Yellow = "#bebe2e",
+  Black = "#1f1f1f",
 }
 
 export enum ColorsResult {
