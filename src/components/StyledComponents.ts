@@ -4,7 +4,6 @@ import imgBackground from "../assets/images/Background.jpg";
 import { Colors, ColorsResult } from "../utils/Models";
 
 interface INut {
-  marginBottom?: number;
   backgroundColorCell?: Colors;
 }
 
@@ -30,18 +29,6 @@ const fadeIn = keyframes`
   }
   to {
     opacity: 1;
-    transform: scale(1);
-  }
-`;
-
-const pulse = keyframes`
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
     transform: scale(1);
   }
 `;
@@ -100,16 +87,12 @@ export const Nut = styled.div<INut>`
     backgroundColorCell &&
     `
     background: #fff;
-    box-shadow: inset -2px -2px 5px 7px ${backgroundColorCell}, 2px 2px 5px 1px #000;
+    box-shadow: inset -2px -2px 5px 6px ${backgroundColorCell}, 2px 2px 5px 1px #000;
     border: 0 solid ${backgroundColorCell};
   `};
 
-  display: flex;
-  justify-content: center;
-  margin-bottom: ${({ marginBottom }) => `${marginBottom}px`};
   cursor: pointer;
   color: white;
-  animation: ${fadeIn} 300ms ease-in-out;
 `;
 
 export const NutSmall = styled.div<INutResult>`
@@ -121,7 +104,6 @@ export const NutSmall = styled.div<INutResult>`
   margin-bottom: ${({ marginBottom }) => `${marginBottom}px`};
   border: 2px solid #00000030;
   position: relative;
-  /* animation: ${pulse} 1s infinite; */
   animation: ${fadeIn} 300ms ease-in-out;
 `;
 
