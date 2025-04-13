@@ -35,14 +35,10 @@ Use your logic and deduction skills to win!
 - Play again functionality
 - Fully responsive UI
 
-## 🌐 Live Demo
-
-[🔗 Try it Online](https://your-deployed-link.com)
-
 ## 🧑‍💻 Developer
 
 - **Your Name**  
-  [GitHub](https://github.com/your-username)
+  [GitHub](https://github.com/ali-tz-2004/mastermind)
 
 ---
 
