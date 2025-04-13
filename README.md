@@ -35,11 +35,12 @@ Use your logic and deduction skills to win!
 - Play again functionality
 - Fully responsive UI
 
-## 🧑‍💻 Developer
-
-- **Your Name**  
-  [GitHub](https://github.com/ali-tz-2004/mastermind)
-
----
-
 Enjoy the game! 🕹️  
+
+## 🚀 Getting Started
+
+1. Clone the repository:
+```bash
+git clone https://github.com/ali-tz-2004/mastermind
+cd chess
+
