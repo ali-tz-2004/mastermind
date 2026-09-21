@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import "./App.css";
+import { useCallback, useEffect, useState } from "react";
 import {
   Check,
   EndGame,
@@ -32,8 +31,8 @@ import { FaCircleCheck } from "react-icons/fa6";
 import { getRandomInt } from "./utils/Utils";
 
 function App() {
-  const [Cells, setCells] = useState<ICell[][]>([]);
-  const [CellsPuzzle, setCellsPuzzle] = useState<IPuzzleCell[]>([]);
+  const [cells, setCells] = useState<ICell[][]>([]);
+  const [cellsPuzzle, setCellsPuzzle] = useState<IPuzzleCell[]>([]);
   const [colorCell, setColorCell] = useState<IColor>();
   const [level, setLevel] = useState<number>(1);
   const [indexCell, setIndexCell] = useState<number>(0);
@@ -60,11 +59,11 @@ function App() {
   const fillSelectCell = (
     index: number,
     indexParent: number,
-    indexChild: number
+    indexChild: number,
   ) => {
-    if (gameOver == GameOver.Win || gameOver == GameOver.Lose) return;
+    if (gameOver === GameOver.Win || gameOver === GameOver.Lose) return;
 
-    const temp = [...Cells];
+    const temp = [...cells];
 
     if (temp[index][indexParent].isDone) return;
 
@@ -74,7 +73,7 @@ function App() {
       colorCell?.value;
 
     const isChecked = temp[index][indexParent].mainCells.some(
-      (x) => !x.StatusColor
+      (x) => !x.StatusColor,
     );
 
     if (!isChecked) {
@@ -86,7 +85,7 @@ function App() {
     setCells(temp);
   };
 
-  const fillDesignCells = () => {
+  const fillDesignCells = useCallback(() => {
     let tempCells: ICell[][] = [];
     let tempCellsChildren: ICell[] = [];
     let tempCheck: ICheck[] = [];
@@ -121,17 +120,17 @@ function App() {
       marginCount += 40;
     }
     setChecked(tempCheck);
-  };
+  }, []);
 
   const comparison = (temp: ICell[][]) => {
     let index = 0;
     let statusColor: Colors[] = [];
     for (let i = 0; i < 4; i++) {
       if (
-        CellsPuzzle[i].StatusColor ===
+        cellsPuzzle[i].StatusColor ===
           temp[indexCell][0].mainCells[i].StatusColor &&
         !statusColor.some(
-          (x) => x === temp[indexCell][0].mainCells[i].StatusColor
+          (x) => x === temp[indexCell][0].mainCells[i].StatusColor,
         )
       ) {
         temp[indexCell][0].resultCells[index].StatusColor = ColorsResult.Black;
@@ -146,11 +145,11 @@ function App() {
     }
     for (let i = 0; i < 4; i++) {
       if (
-        CellsPuzzle.some(
-          (x) => x.StatusColor === temp[indexCell][0].mainCells[i].StatusColor
+        cellsPuzzle.some(
+          (x) => x.StatusColor === temp[indexCell][0].mainCells[i].StatusColor,
         ) &&
         !statusColor.some(
-          (x) => x === temp[indexCell][0].mainCells[i].StatusColor
+          (x) => x === temp[indexCell][0].mainCells[i].StatusColor,
         )
       ) {
         temp[indexCell][0].resultCells[index].StatusColor = ColorsResult.White;
@@ -163,7 +162,7 @@ function App() {
   };
 
   const onCheck = (index: number) => {
-    const temp = [...Cells];
+    const temp = [...cells];
     temp[indexCell][0].isDone = true;
     const newLevel = level + 1;
     comparison(temp);
@@ -175,7 +174,7 @@ function App() {
   };
 
   const reset = () => {
-    const temp = [...Cells];
+    const temp = [...cells];
     for (let i = 0; i < 9; i++) {
       for (let j = 0; j < 4; j++) {
         temp[i][0].mainCells[j].StatusColor = undefined;
@@ -204,23 +203,26 @@ function App() {
     fillPuzzleCells();
   };
 
-  const getRandomColors = (
-    colorCount: number = 4,
-    temp: IColor[] = [],
-    index: number = 0
-  ): IColor[] => {
-    if (temp.length == colorCount) return temp;
+  const getRandomColors = useCallback(
+    (
+      colorCount: number = 4,
+      temp: IColor[] = [],
+      index: number = 0,
+    ): IColor[] => {
+      if (temp.length === colorCount) return temp;
 
-    var randomColorKey = getRandomInt(ColorsCells.length);
+      var randomColorKey = getRandomInt(ColorsCells.length);
 
-    if (temp.some((x) => x.key == randomColorKey)) {
-      return getRandomColors(colorCount, temp, index);
-    }
-    temp[index] = ColorsCells.find((x) => x.key == randomColorKey)!;
-    return getRandomColors(colorCount, temp, index + 1);
-  };
+      if (temp.some((x) => x.key === randomColorKey)) {
+        return getRandomColors(colorCount, temp, index);
+      }
+      temp[index] = ColorsCells.find((x) => x.key === randomColorKey)!;
+      return getRandomColors(colorCount, temp, index + 1);
+    },
+    [],
+  );
 
-  const fillPuzzleCells = () => {
+  const fillPuzzleCells = useCallback(() => {
     let puzzleCell: IPuzzleCell[] = [];
     let randomColors = getRandomColors();
 
@@ -229,19 +231,19 @@ function App() {
     });
 
     setCellsPuzzle(puzzleCell);
-  };
+  }, [getRandomColors]);
 
   useEffect(() => {
     fillDesignCells();
     fillPuzzleCells();
-  }, []);
+  }, [fillDesignCells, fillPuzzleCells]);
 
   return (
     <Main>
       <Panel>
         <PlayGame>
           <Nuts>
-            {CellsPuzzle.map((x) => (
+            {cellsPuzzle.map((x) => (
               <Nut
                 key={x.index}
                 backgroundColorCell={
@@ -249,7 +251,7 @@ function App() {
                 }
               ></Nut>
             ))}
-            {Cells?.map((z, index) =>
+            {cells?.map((z, index) =>
               z.map((y, indexParent) =>
                 y.mainCells.map((x, indexChild) => (
                   <Nut
@@ -259,8 +261,8 @@ function App() {
                       fillSelectCell(index, indexParent, indexChild)
                     }
                   ></Nut>
-                ))
-              )
+                )),
+              ),
             )}
             {gameOver === GameOver.Playing ? <Tag></Tag> : null}
             <Check>
@@ -269,12 +271,12 @@ function App() {
                   <IconImage bottom={x.margin} onClick={() => onCheck(x.index)}>
                     <FaCircleCheck color="#a52a2a" size={20} />
                   </IconImage>
-                ) : null
+                ) : null,
               )}
             </Check>
           </Nuts>
           <NutsSmall>
-            {Cells?.map((z) =>
+            {cells?.map((z) =>
               z.map((y) =>
                 y.resultCells.map((x) => (
                   <NutSmall
@@ -287,8 +289,8 @@ function App() {
                       ></NutSmallOut>
                     ) : null}
                   </NutSmall>
-                ))
-              )
+                )),
+              ),
             )}
           </NutsSmall>
         </PlayGame>
