@@ -14,7 +14,8 @@ import {
   Tag,
   TagCell,
   TagsPanel,
-} from "./components/StyledComponents";
+  HelpButton,
+} from "./components/game/Game.styles";
 import { ColorsCells } from "./utils/Colors";
 import {
   Colors,
@@ -29,6 +30,7 @@ import {
 } from "./utils/Models";
 import { FaCircleCheck } from "react-icons/fa6";
 import { getRandomInt } from "./utils/Utils";
+import HelpModal from "./components/help-modal/HelpModal";
 
 function App() {
   const [cells, setCells] = useState<ICell[][]>([]);
@@ -40,6 +42,7 @@ function App() {
 
   const [selectedKey, setSelectedKey] = useState<number>();
   const [gameOver, setGameOver] = useState<GameOver>(GameOver.Playing);
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
 
   const SelectCell = (isChecked: boolean, key: number) => {
     if (isChecked) {
@@ -241,6 +244,13 @@ function App() {
   return (
     <Main>
       <Panel>
+        <HelpButton
+          type="button"
+          onClick={() => setIsHelpOpen(true)}
+          aria-label="راهنمای بازی"
+        >
+          ?
+        </HelpButton>
         <PlayGame>
           <Nuts>
             {cellsPuzzle.map((x) => (
@@ -308,21 +318,21 @@ function App() {
         </TagsPanel>
         {gameOver === GameOver.Win ? (
           <EndGame>
-            You Are
-            <br />
-            <div className="gameOver">Win</div>
-            <button onClick={playAgain}>play again</button>
+            <div className="gameOver">برنده شدید!</div>
+
+            <button onClick={playAgain}>بازی دوباره</button>
           </EndGame>
         ) : null}
+
         {gameOver === GameOver.Lose ? (
           <EndGame>
-            You Are
-            <br />
-            <div className="gameOver">Lose</div>
-            <button onClick={playAgain}>play again</button>
+            <div className="gameOver">باختید!</div>
+
+            <button onClick={playAgain}>بازی دوباره</button>
           </EndGame>
         ) : null}
       </Panel>
+      <HelpModal isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />
     </Main>
   );
 }
