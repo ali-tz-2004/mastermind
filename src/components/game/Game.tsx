@@ -43,6 +43,8 @@ interface GameProps {
 }
 
 const Game = ({ difficulty, onBackToMenu }: GameProps) => {
+  const countCellsChild = 4;
+
   const [cells, setCells] = useState<ICell[][]>([]);
   const [cellsPuzzle, setCellsPuzzle] = useState<IPuzzleCell[]>([]);
   const [colorCell, setColorCell] = useState<IColor>();
@@ -123,7 +125,6 @@ const Game = ({ difficulty, onBackToMenu }: GameProps) => {
     let tempCheck: ICheck[] = [];
 
     const countCells = currentDifficulty.attempts;
-    const countCellsChild = 4;
     const countCheck = currentDifficulty.attempts;
     let marginCount = 10;
 
@@ -164,87 +165,91 @@ const Game = ({ difficulty, onBackToMenu }: GameProps) => {
     setChecked(tempCheck);
   }, [currentDifficulty.attempts]);
 
-  const comparison = (temp: ICell[][]) => {
-    let index = 0;
-    let statusColor: Colors[] = [];
+  const comparison = (temp: ICell[][]): boolean => {
+    let resultIndex = 0;
+    const statusColor: Colors[] = [];
+
+    const currentCells = temp[indexCell][0];
+
     for (let i = 0; i < currentDifficulty.colorCount; i++) {
+      const selectedColor = currentCells.mainCells[i].StatusColor;
+
       if (
-        cellsPuzzle[i].StatusColor ===
-          temp[indexCell][0].mainCells[i].StatusColor &&
-        !statusColor.some(
-          (x) => x === temp[indexCell][0].mainCells[i].StatusColor,
-        )
+        cellsPuzzle[i].StatusColor === selectedColor &&
+        selectedColor &&
+        !statusColor.includes(selectedColor)
       ) {
-        temp[indexCell][0].resultCells[index].StatusColor = ColorsResult.Black;
-        index++;
-        statusColor.push(temp[indexCell][0].mainCells[i].StatusColor!);
+        currentCells.resultCells[resultIndex].StatusColor = ColorsResult.Black;
+
+        resultIndex++;
+        statusColor.push(selectedColor);
       }
     }
+
     if (statusColor.length === currentDifficulty.colorCount) {
-      setGameOver(GameOver.Win);
-      setCells(temp);
-      const newBestScore = updateBestScore(
-        difficulty,
-        calculateScore(difficulty, level),
-      );
-
-      setBestScore(newBestScore);
-      return;
+      return true;
     }
+
     for (let i = 0; i < currentDifficulty.colorCount; i++) {
+      const selectedColor = currentCells.mainCells[i].StatusColor;
+
       if (
-        cellsPuzzle.some(
-          (x) => x.StatusColor === temp[indexCell][0].mainCells[i].StatusColor,
-        ) &&
-        !statusColor.some(
-          (x) => x === temp[indexCell][0].mainCells[i].StatusColor,
-        )
+        selectedColor &&
+        cellsPuzzle.some((x) => x.StatusColor === selectedColor) &&
+        !statusColor.includes(selectedColor)
       ) {
-        temp[indexCell][0].resultCells[index].StatusColor = ColorsResult.White;
-        index++;
-        statusColor.push(temp[indexCell][0].mainCells[i].StatusColor!);
+        currentCells.resultCells[resultIndex].StatusColor = ColorsResult.White;
+
+        resultIndex++;
+        statusColor.push(selectedColor);
       }
     }
 
-    setCells(temp);
+    return false;
   };
 
   const onCheck = (index: number) => {
+    if (gameOver !== GameOver.Playing) return;
+
+    const currentCheck = checked.find((x) => x.index === index);
+
+    if (!currentCheck?.visible) return;
+
     const temp = [...cells];
     temp[indexCell][0].isDone = true;
 
-    const tempChecked = [...checked];
-    const currentCheck = tempChecked.find((x) => x.index === index);
-
-    if (currentCheck) {
-      currentCheck.visible = false;
-    }
-
-    setChecked(tempChecked);
-
-    const newLevel = level + 1;
+    currentCheck.visible = false;
+    setChecked([...checked]);
 
     const currentScore = calculateScore(difficulty, level);
-
     setScore(currentScore);
 
-    comparison(temp);
+    const isWin = comparison(temp);
 
-    setLevel(newLevel);
     setCells(temp);
 
-    if (index === currentDifficulty.attempts && gameOver === GameOver.Playing) {
-      setGameOver(GameOver.Lose);
+    if (isWin) {
+      setGameOver(GameOver.Win);
+
       const newBestScore = updateBestScore(difficulty, currentScore);
 
       setBestScore(newBestScore);
+
+      return;
     }
+
+    if (index === currentDifficulty.attempts) {
+      setGameOver(GameOver.Lose);
+      return;
+    }
+
+    setLevel(level + 1);
   };
 
   const reset = () => {
     const temp = [...cells];
     for (let i = 0; i < currentDifficulty.attempts; i++) {
-      for (let j = 0; j < 4; j++) {
+      for (let j = 0; j < countCellsChild; j++) {
         temp[i][0].mainCells[j].StatusColor = undefined;
         temp[i][0].resultCells[j].StatusColor = undefined;
         temp[i][0].isFill = false;
@@ -274,7 +279,7 @@ const Game = ({ difficulty, onBackToMenu }: GameProps) => {
 
   const getRandomColors = useCallback(
     (
-      colorCount: number = 4,
+      colorCount: number = countCellsChild,
       temp: IColor[] = [],
       index: number = 0,
     ): IColor[] => {
@@ -360,7 +365,11 @@ const Game = ({ difficulty, onBackToMenu }: GameProps) => {
             <Check>
               {checked.map((x) =>
                 x.visible ? (
-                  <IconImage bottom={x.margin} onClick={() => onCheck(x.index)}>
+                  <IconImage
+                    bottom={x.margin}
+                    onClick={() => onCheck(x.index)}
+                    key={x.index}
+                  >
                     <FaCircleCheck color="#a52a2a" size={20} />
                   </IconImage>
                 ) : null,

@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 export const HelpButton = styled.button`
   position: absolute;
+
   top: 8px;
   right: 8px;
 
@@ -48,7 +49,6 @@ export const HelpOverlay = styled.div`
   padding: 20px;
 
   background: rgba(0, 0, 0, 0.7);
-
   backdrop-filter: blur(4px);
 `;
 
@@ -57,6 +57,7 @@ export const HelpModalContainer = styled.div`
 
   width: min(100%, 420px);
   max-height: 90vh;
+
   overflow-y: auto;
 
   padding: 28px;
@@ -77,6 +78,7 @@ export const HelpModalContainer = styled.div`
 
 export const HelpCloseButton = styled.button`
   position: absolute;
+
   top: 10px;
   left: 12px;
 
