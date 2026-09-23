@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Background from "../../assets/images/Background.jpg";
+import Background from "../../assets/images/background-2.png";
 
 export const MainMenuContainer = styled.main`
   min-height: 100vh;

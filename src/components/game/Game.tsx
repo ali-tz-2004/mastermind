@@ -317,15 +317,15 @@ const Game = ({ difficulty, onBackToMenu }: GameProps) => {
 
   return (
     <Main>
-      <BackButton
-        type="button"
-        onClick={onBackToMenu}
-        aria-label="بازگشت به منو"
-      >
-        <FaArrowLeft size={12} />
-        <span>منو</span>
-      </BackButton>
       <Panel>
+        <BackButton
+          type="button"
+          onClick={onBackToMenu}
+          aria-label="بازگشت به منو"
+        >
+          <FaArrowLeft size={12} />
+          <span>منو</span>
+        </BackButton>
         <Score>
           <span>امتیاز: {score}</span>
           <span>بهترین امتیاز: {bestScore}</span>

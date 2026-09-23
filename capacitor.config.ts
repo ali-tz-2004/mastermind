@@ -2,7 +2,7 @@ import type { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
   appId: "com.ali.tz.mastermind",
-  appName: "فکر و بکر",
+  appName: "فکر بکر",
   webDir: "build",
 };
 

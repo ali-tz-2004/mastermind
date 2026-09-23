@@ -1,4 +1,4 @@
-# 🎯 Mastermind — Fekr o Bekr
+# 🎯 Mastermind — Fekr Bekr
 
 A colorful logic game inspired by the classic **Mastermind** game, built with React and TypeScript.
 
@@ -8,18 +8,18 @@ The goal is to discover the secret 4-color combination using logic and deduction
 
 ## 🧠 How to Play
 
-* The game generates a secret combination of **4 unique colors**.
-* Choose colors and submit your guess.
-* After each attempt, you receive feedback:
+- The game generates a secret combination of **4 unique colors**.
+- Choose colors and submit your guess.
+- After each attempt, you receive feedback:
+  - ⚫ **Black** — correct color and correct position
+  - ⚪ **White** — correct color but wrong position
 
-  * ⚫ **Black** — correct color and correct position
-  * ⚪ **White** — correct color but wrong position
-* You can play with different difficulty levels:
+- You can play with different difficulty levels:
+  - 🟢 **Easy** — 10 attempts
+  - 🟡 **Normal** — 8 attempts
+  - 🔴 **Hard** — 6 attempts
 
-  * 🟢 **Easy** — 10 attempts
-  * 🟡 **Normal** — 8 attempts
-  * 🔴 **Hard** — 6 attempts
-* The game ends when you find the secret combination or run out of attempts.
+- The game ends when you find the secret combination or run out of attempts.
 
 ## 🏆 Scoring
 
@@ -39,27 +39,27 @@ Your **Best Score** is saved separately for each difficulty level.
 
 ## ✨ Features
 
-* 🎯 Secret 4-color combination generation
-* 🎨 Unique colors in each secret combination
-* ⚫ Black / ⚪ White result feedback
-* 🏆 Difficulty levels
-* 📊 Score calculation
-* 🥇 Best score tracking with `localStorage`
-* 🎉 Win / Lose detection
-* 🔄 Play again functionality
-* 📖 In-game help
-* 📱 Responsive interface
-* 📲 Android support with Capacitor
-* 🚪 Exit option on Android
+- 🎯 Secret 4-color combination generation
+- 🎨 Unique colors in each secret combination
+- ⚫ Black / ⚪ White result feedback
+- 🏆 Difficulty levels
+- 📊 Score calculation
+- 🥇 Best score tracking with `localStorage`
+- 🎉 Win / Lose detection
+- 🔄 Play again functionality
+- 📖 In-game help
+- 📱 Responsive interface
+- 📲 Android support with Capacitor
+- 🚪 Exit option on Android
 
 ## 🛠 Tech Stack
 
-* ⚛️ React
-* 🧩 TypeScript
-* 💅 Styled Components
-* 📱 Capacitor
-* 🤖 Android
-* 🚀 Create React App
+- ⚛️ React
+- 🧩 TypeScript
+- 💅 Styled Components
+- 📱 Capacitor
+- 🤖 Android
+- 🚀 Create React App
 
 ## 📁 Project Structure
 
@@ -147,13 +147,13 @@ https://mastermind-iota-six.vercel.app/
 
 ## 🔮 Future Plans
 
-* 👤 User accounts
-* 🏆 Online leaderboard
-* 📈 Game statistics
-* 🕘 Game history
-* ☁️ Backend integration
-* ⏱️ Optional timed game mode
-* 🎮 Additional games
+- 👤 User accounts
+- 🏆 Online leaderboard
+- 📈 Game statistics
+- 🕘 Game history
+- ☁️ Backend integration
+- ⏱️ Optional timed game mode
+- 🎮 Additional games
 
 ---
 

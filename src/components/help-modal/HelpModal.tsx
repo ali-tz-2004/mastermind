@@ -31,7 +31,7 @@ function HelpModal({ isOpen, onClose }: HelpModalProps) {
         <HelpTitle>راهنمای بازی</HelpTitle>
 
         <HelpIntro>
-          در بازی فکر و بکر باید رمز مخفی را با انتخاب رنگ‌های درست پیدا کنید.
+          در بازی فکر بکر باید رمز مخفی را با انتخاب رنگ‌های درست پیدا کنید.
         </HelpIntro>
 
         <HelpSection>

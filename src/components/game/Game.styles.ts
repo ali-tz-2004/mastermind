@@ -357,8 +357,8 @@ export const HelpButton = styled.button`
 
 export const BackButton = styled.button`
   position: absolute;
-  top: 16px;
-  left: 16px;
+  top: -44px;
+  left: 0px;
 
   display: flex;
   align-items: center;

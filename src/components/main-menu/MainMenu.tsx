@@ -47,7 +47,7 @@ function MainMenu({
 
   return (
     <MainMenuContainer>
-      <Logo>فکر و بکر</Logo>
+      <Logo>فکر بکر</Logo>
 
       <Subtitle>رمز مخفی را پیدا کن!</Subtitle>
 
