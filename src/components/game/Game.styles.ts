@@ -292,20 +292,26 @@ export const EndGame = styled.div`
     font-size: 50px;
   }
 
-  button {
-    margin-top: 1rem;
+  .buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 
-    background-color: transparent;
+    button {
+      margin-top: 1rem;
 
-    border: 3px solid #fff;
+      background-color: transparent;
 
-    padding: 7px 18px;
+      border: 3px solid #fff;
 
-    border-radius: 10px;
+      padding: 7px 18px;
 
-    color: #fff;
+      border-radius: 10px;
 
-    cursor: pointer;
+      color: #fff;
+
+      cursor: pointer;
+    }
   }
 `;
 
@@ -391,6 +397,9 @@ export const Score = styled.div`
   position: absolute;
   top: -38px;
   right: 0;
+
+  display: flex;
+  gap: 16px;
 
   color: #fff;
   font-size: 14px;

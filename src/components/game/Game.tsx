@@ -35,6 +35,7 @@ import {
 } from "./Game.styles";
 import { FaArrowLeft, FaCircleCheck } from "react-icons/fa6";
 import { calculateScore } from "../../utils/Score";
+import { getBestScore, updateBestScore } from "../../utils/BestScore";
 
 interface GameProps {
   difficulty: Difficulty;
@@ -53,6 +54,7 @@ const Game = ({ difficulty, onBackToMenu }: GameProps) => {
   const [gameOver, setGameOver] = useState<GameOver>(GameOver.Playing);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [score, setScore] = useState<number>(0);
+  const [bestScore, setBestScore] = useState<number>(getBestScore(difficulty));
 
   const difficultyConfig = {
     easy: {
@@ -181,6 +183,12 @@ const Game = ({ difficulty, onBackToMenu }: GameProps) => {
     if (statusColor.length === currentDifficulty.colorCount) {
       setGameOver(GameOver.Win);
       setCells(temp);
+      const newBestScore = updateBestScore(
+        difficulty,
+        calculateScore(difficulty, level),
+      );
+
+      setBestScore(newBestScore);
       return;
     }
     for (let i = 0; i < currentDifficulty.colorCount; i++) {
@@ -205,6 +213,15 @@ const Game = ({ difficulty, onBackToMenu }: GameProps) => {
     const temp = [...cells];
     temp[indexCell][0].isDone = true;
 
+    const tempChecked = [...checked];
+    const currentCheck = tempChecked.find((x) => x.index === index);
+
+    if (currentCheck) {
+      currentCheck.visible = false;
+    }
+
+    setChecked(tempChecked);
+
     const newLevel = level + 1;
 
     const currentScore = calculateScore(difficulty, level);
@@ -218,6 +235,9 @@ const Game = ({ difficulty, onBackToMenu }: GameProps) => {
 
     if (index === currentDifficulty.attempts && gameOver === GameOver.Playing) {
       setGameOver(GameOver.Lose);
+      const newBestScore = updateBestScore(difficulty, currentScore);
+
+      setBestScore(newBestScore);
     }
   };
 
@@ -301,7 +321,10 @@ const Game = ({ difficulty, onBackToMenu }: GameProps) => {
         <span>منو</span>
       </BackButton>
       <Panel>
-        <Score>امتیاز: {score}</Score>
+        <Score>
+          <span>امتیاز: {score}</span>
+          <span>بهترین امتیاز: {bestScore}</span>
+        </Score>
         <HelpButton
           type="button"
           onClick={() => setIsHelpOpen(true)}
@@ -380,7 +403,10 @@ const Game = ({ difficulty, onBackToMenu }: GameProps) => {
         {gameOver === GameOver.Win ? (
           <EndGame>
             <div className="gameOver">برنده شدید!</div>
-            <button onClick={playAgain}>بازی دوباره</button>
+            <div className="buttons">
+              <button onClick={playAgain}>بازی دوباره</button>
+              <button onClick={onBackToMenu}>بازگشت به منو</button>
+            </div>
           </EndGame>
         ) : null}
 
@@ -388,7 +414,10 @@ const Game = ({ difficulty, onBackToMenu }: GameProps) => {
           <EndGame>
             <div className="gameOver">باختید!</div>
 
-            <button onClick={playAgain}>بازی دوباره</button>
+            <div className="buttons">
+              <button onClick={playAgain}>بازی دوباره</button>
+              <button onClick={onBackToMenu}>بازگشت به منو</button>
+            </div>
           </EndGame>
         ) : null}
       </Panel>
