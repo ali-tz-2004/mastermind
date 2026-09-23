@@ -386,3 +386,15 @@ export const BackButton = styled.button`
     transform: scale(0.97);
   }
 `;
+
+export const Score = styled.div`
+  position: absolute;
+  top: -38px;
+  right: 0;
+
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+
+  direction: rtl;
+`;

@@ -31,8 +31,10 @@ import {
   TagCell,
   EndGame,
   BackButton,
+  Score,
 } from "./Game.styles";
 import { FaArrowLeft, FaCircleCheck } from "react-icons/fa6";
+import { calculateScore } from "../../utils/Score";
 
 interface GameProps {
   difficulty: Difficulty;
@@ -50,6 +52,7 @@ const Game = ({ difficulty, onBackToMenu }: GameProps) => {
   const [selectedKey, setSelectedKey] = useState<number>();
   const [gameOver, setGameOver] = useState<GameOver>(GameOver.Playing);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [score, setScore] = useState<number>(0);
 
   const difficultyConfig = {
     easy: {
@@ -201,10 +204,18 @@ const Game = ({ difficulty, onBackToMenu }: GameProps) => {
   const onCheck = (index: number) => {
     const temp = [...cells];
     temp[indexCell][0].isDone = true;
+
     const newLevel = level + 1;
+
+    const currentScore = calculateScore(difficulty, level);
+
+    setScore(currentScore);
+
     comparison(temp);
+
     setLevel(newLevel);
     setCells(temp);
+
     if (index === currentDifficulty.attempts && gameOver === GameOver.Playing) {
       setGameOver(GameOver.Lose);
     }
@@ -237,6 +248,7 @@ const Game = ({ difficulty, onBackToMenu }: GameProps) => {
     setGameOver(GameOver.Playing);
     setIndexCell(0);
     setLevel(1);
+    setScore(0);
     fillPuzzleCells();
   };
 
@@ -289,6 +301,7 @@ const Game = ({ difficulty, onBackToMenu }: GameProps) => {
         <span>منو</span>
       </BackButton>
       <Panel>
+        <Score>امتیاز: {score}</Score>
         <HelpButton
           type="button"
           onClick={() => setIsHelpOpen(true)}
@@ -367,7 +380,6 @@ const Game = ({ difficulty, onBackToMenu }: GameProps) => {
         {gameOver === GameOver.Win ? (
           <EndGame>
             <div className="gameOver">برنده شدید!</div>
-
             <button onClick={playAgain}>بازی دوباره</button>
           </EndGame>
         ) : null}
