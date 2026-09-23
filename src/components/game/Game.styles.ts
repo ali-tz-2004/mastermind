@@ -348,3 +348,41 @@ export const HelpButton = styled.button`
     transform: scale(1.1);
   }
 `;
+
+export const BackButton = styled.button`
+  position: absolute;
+  top: 16px;
+  left: 16px;
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 6px 10px;
+
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+
+  background: rgba(0, 0, 0, 0.74);
+  color: rgba(255, 255, 255, 0.75);
+
+  font-size: 13px;
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.88);
+    border-color: rgba(255, 255, 255, 0.28);
+    color: #fff;
+  }
+
+  &:active {
+    background: rgba(0, 0, 0, 0.95);
+    transform: scale(0.97);
+  }
+`;

@@ -51,3 +51,5 @@ export interface ICheck {
   margin: number;
   visible: boolean;
 }
+
+export type Difficulty = "easy" | "normal" | "hard";
