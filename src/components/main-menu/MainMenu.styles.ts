@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import Background from "../../assets/images/background-2.png";
+import BackgroundMobile from "../../assets/images/background-main-menu-mobile.png";
+import BackgroundDesktop from "../../assets/images/background-main-menu-desktop.png";
 
 export const MainMenuContainer = styled.main`
   min-height: 100vh;
@@ -12,11 +13,15 @@ export const MainMenuContainer = styled.main`
   padding: 24px;
   box-sizing: border-box;
 
-  background-image: url(${Background});
+  background-image: url(${BackgroundDesktop});
+  background-size: cover;
+  background-position: center;
 
   direction: rtl;
 
   @media (max-width: 768px) {
+    background-image: url(${BackgroundMobile});
+
     background-size: cover;
     background-position: center;
   }

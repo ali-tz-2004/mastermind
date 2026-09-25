@@ -5,7 +5,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-image: url("./assets/images/background-3.png") !important;
+  background-image: url("./assets/images/background-game-desktop.png");
+  background-size: cover;
+  background-position: center;
 }
 
 * {
@@ -23,6 +25,7 @@ button {
 
   @media (max-width: 768px) {
     body{
+      background-image: url("./assets/images/background-game-mobile.png");
       background-size: cover;
       background-position: center;
     }
