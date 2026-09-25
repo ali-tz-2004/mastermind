@@ -285,7 +285,7 @@ const Game = ({ difficulty, onBackToMenu }: GameProps) => {
     ): IColor[] => {
       if (temp.length === colorCount) return temp;
 
-      var randomColorKey = getRandomInt(ColorsCells.length);
+      const randomColorKey = getRandomInt(ColorsCells.length);
 
       if (temp.some((x) => x.key === randomColorKey)) {
         return getRandomColors(colorCount, temp, index);
