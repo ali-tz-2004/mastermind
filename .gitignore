@@ -21,3 +21,14 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+
+# Android signing
+android/*.jks
+android/*.keystore
+android/keystore.properties
+
+# Cafe Bazaar Bundle Signer output
+*.bin
+bundle-signer/
+bundlesigner-*.jar
